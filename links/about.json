@@ -1,0 +1,14 @@
+{
+  "fields": [
+    { "label": "이름",     "value": "김 융" },
+    { "label": "생년월일",  "value": "2003/03/07" },
+    { "label": "성별",     "value": "남성" },  
+    { "label": "활동명",   "value": "systile / systil3" }
+  ],
+  "education": [
+    { "label": "학교", "value": "KAIST" },
+    { "label": "입학", "value": "2022" },
+    { "label": "전공", "value": "CS / ID" }
+  ],
+  "bio": "삶의 균열에서 나오는 가치를 탐닉하는 보잘것없는 디자이너입니다."
+}

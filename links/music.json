@@ -1,0 +1,29 @@
+{   
+    "label" : "music",
+    "links" : [
+
+    {"link" : "https://fanlink.tv/manacle",
+    "title" : "Manacle",
+    "desc" : "Breaks / UK Garage"},
+
+    {"link" : "https://fanlink.tv/HitOnMe",
+    "title" : "Hit on Me",
+    "desc" : "UK Garage"},
+
+    {"link" : "https://fanlink.tv/branchedworld",
+    "title" : "branched world",
+    "desc" : "4 tracks EP"},
+
+    {"link" : "https://rubatonin.bandcamp.com/album/garage-station",
+    "title" : "Starfruit",
+    "desc" : "House / from F/C : Garage Station"},
+
+    {"link" : "https://www.diverse.direct/milkyway-traxx/mkwy0018/",
+    "title" : "HYPERSTREET",
+    "desc" : "Speed House / from F/C : 1/6 of Stylish"},
+
+    {"link" : "https://sssonline.bandcamp.com/album/the-secret-sauce-vol-4",
+    "title" : "Soda Sphere",
+    "desc" : "House / from F/C : The Secret Sauce V4"}
+    ]
+}
