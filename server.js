@@ -6,7 +6,6 @@ const path  = require('path');
 const PORT = 5000;
 const ROOT = __dirname;
 
-const IMAGE_EXTS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg']);
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -46,23 +45,6 @@ const server = http.createServer((req, res) => {
     }).on('error', () => {
       res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
       res.end(JSON.stringify({ url: '' }));
-    });
-    return;
-  }
-
-  // 이미지 목록
-  const apiMatch = urlPath.match(/^\/api\/images\/([^/]+)$/);
-  if (apiMatch) {
-    const folder = apiMatch[1];
-    const folderPath = path.join(ROOT, folder);
-    if (!folderPath.startsWith(ROOT)) {
-      res.writeHead(403); return res.end('Forbidden');
-    }
-    fs.readdir(folderPath, (err, files) => {
-      if (err) { res.writeHead(404); return res.end('Not Found'); }
-      const images = files.filter(f => IMAGE_EXTS.has(path.extname(f).toLowerCase()));
-      res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' });
-      res.end(JSON.stringify(images));
     });
     return;
   }

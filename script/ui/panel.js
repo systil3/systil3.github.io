@@ -36,7 +36,7 @@ const panelItems    = document.getElementById('panel-items');
 const hint          = document.getElementById('hint');
 
 async function loadImages(folder) {
-  const res = await fetch(`/api/images/${folder}`);
+  const res = await fetch(`/${folder}/images.json`);
   return res.ok ? res.json() : [];
 }
 
