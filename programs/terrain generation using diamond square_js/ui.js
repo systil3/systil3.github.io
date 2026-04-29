@@ -67,7 +67,7 @@ export function initUI() {
   bindSlider('rough',  'rough-val');
   bindSlider('denoise','denoise-val');
 
-  const rc = readControls();
+  
   document.getElementById('scheme').addEventListener('change', () => {
     if (cached) renderTerrain(canvas, cached.terrain, cached.cells, rc.scheme);
   });
@@ -76,10 +76,10 @@ export function initUI() {
 
   document.getElementById('save-btn').addEventListener('click', () => {
     if (!cached) return;
-
+    const rc = readControls();
     const a  = document.createElement('a');
     a.download = `${customName}_n=${rc.n}_rough=${rc.roughness}_denoise=${rc.denoise}.png`;
-    a.href     = canvas.toDataURL(`${customName}_${rc.scheme}_n=${rc.n}_rough=${rc.roughness}_denoise=${rc.denoise}`);
+    a.href     = canvas.toDataURL(a.download);
     a.click();
   });
 }
