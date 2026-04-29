@@ -29,7 +29,6 @@ const MIME = {
 const server = http.createServer((req, res) => {
   let urlPath = decodeURIComponent(req.url.split('?')[0]);
 
-  // OG 이미지 URL 프록시
   if (urlPath === '/api/og') {
     const targetUrl = new URL(req.url, 'http://localhost').searchParams.get('url');
     if (!targetUrl) { res.writeHead(400); return res.end('missing url'); }
@@ -51,7 +50,7 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // 이미지 목록 API — 서버가 로컬 폴더를 읽어서 파일명 배열 반환
+  // 이미지 목록
   const apiMatch = urlPath.match(/^\/api\/images\/([^/]+)$/);
   if (apiMatch) {
     const folder = apiMatch[1];
@@ -68,15 +67,8 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (urlPath === '/') urlPath = '/index.html';
 
   const filePath = path.join(ROOT, urlPath);
-
-  // ROOT 바깥 접근 차단
-  if (!filePath.startsWith(ROOT)) {
-    res.writeHead(403);
-    return res.end('Forbidden');
-  }
 
   fs.readFile(filePath, (err, data) => {
     if (err) {

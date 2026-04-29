@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { scene } from '../core/scene.js';
-import { loadSTL } from '../core/loadSTL.js';
+import { loadSTL } from '../core/SceneObject.js';
 import { NODE_R_EXPORT as NODE_R } from '../data/nodes.js';
 
 const COUNT    = 0;

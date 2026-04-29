@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import { scene } from '../core/scene.js';
-import { loadSTL } from '../core/loadSTL.js';
+import { StlObject } from '../core/SceneObject.js';
 
 const mat = new THREE.MeshStandardMaterial({
   color: 0xaabbff,
@@ -12,12 +11,6 @@ const mat = new THREE.MeshStandardMaterial({
   depthWrite: false,
 });
 
-loadSTL('model/icosphere.stl').then(geo => {
-  geo.computeBoundingBox();
-  const size = new THREE.Vector3();
-  geo.boundingBox.getSize(size);
-  const dome = new THREE.Mesh(geo, mat);
-  dome.scale.setScalar(48 / Math.max(size.x, size.y, size.z));
-  dome.position.set(0, 1, 0);
-  scene.add(dome);
-}).catch(err => console.warn('icosphere.stl 로드 실패:', err));
+StlObject.load('model/icosphere.stl', mat)
+  .then(obj => obj.normalizeTo(48).setPosition(0, 1, 0).addToScene())
+  .catch(err => console.warn('icosphere.stl 로드 실패:', err));

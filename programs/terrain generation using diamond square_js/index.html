@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terrain Generator</title>
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+<main>
+  <div class="controls">
+    <h2>used diamond-square algorithm</h2>
+
+    <div class="ctrl">
+      <div class="ctrl-row">
+        <span class="key">segments</span>
+        <span class="value" id="seg-val">64</span>
+      </div>
+      <input type="range" id="seg" min="1" max="11" value="6">
+    </div>
+
+    <div class="ctrl">
+      <div class="ctrl-row">
+        <span class="key">roughness</span>
+        <span class="value" id="rough-val">5</span>
+      </div>
+      <input type="range" id="rough" min="1" max="15" value="5">
+    </div>
+
+    <div class="ctrl">
+      <div class="ctrl-row">
+        <span class="key">denoise</span>
+        <span class="value" id="denoise-val">0</span>
+      </div>
+      <input type="range" id="denoise" min="0" max="50" value="0">
+    </div>
+
+    <hr>
+
+    <div class="ctrl">
+      <div class="ctrl-row"><span class="key">color scheme</span></div>
+      <select id="scheme">
+        <option value="grayscale">grayscale</option>
+        <option value="normal">normal</option>
+      </select>
+    </div>
+
+    <hr>
+
+    <div class="btn-row">
+      <button id="gen-btn">generate</button>
+      <button id="save-btn">save png</button>
+    </div>
+  </div>
+
+  <div class="preview">
+    <div class="canvas-wrap">
+      <canvas id="canvas" width="2048" height="2048"></canvas>
+    </div>
+    <div id="status">—</div>
+  </div>
+</main>
+
+<script type="module">
+  import { initUI } from './ui.js';
+  initUI();
+</script>
+</body>
+</html>

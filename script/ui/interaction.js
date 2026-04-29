@@ -1,12 +1,11 @@
 import * as THREE from 'three';
-import { camera } from '../core/scene.js';
-import { renderer } from '../core/renderer.js';
+import { camera, renderer, focusOnSphere } from '../core/scene.js';
 import { sphereMeshes } from '../mesh/gems.js';
 import { stoneMeshes } from '../mesh/stone.js';
-import { openPanel } from './panel.js';
-import { openAbout } from './aboutPanel.js';
-import { focusOnSphere } from '../core/cameraFocus.js';
+import { openPanel, openAppPanel, openAbout } from './panel.js';
 import { centerMesh } from '../mesh/center.js';
+import { noiseChildren } from '../mesh/noisegenerator.js';
+
 
 const raycaster       = new THREE.Raycaster();
 const pointer         = new THREE.Vector2();
@@ -34,6 +33,16 @@ renderer.domElement.addEventListener('pointerup', e => {
     const centerHits = raycaster.intersectObject(centerMesh, true);
     if (centerHits.length > 0) {
       openAbout();
+      return;
+    }
+  }
+
+  // 노이즈 제너레이터 클릭
+  if (noiseChildren.length > 0) {
+    const noiseHits = raycaster.intersectObjects(noiseChildren);
+    if (noiseHits.length > 0) {
+      const src = encodeURI('programs/terrain generation using diamond square_js/index.html');
+      openAppPanel(src, 'terrain generator');
       return;
     }
   }

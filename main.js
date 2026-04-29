@@ -1,16 +1,14 @@
 import * as THREE from 'three';
 
 // ─── 코어 ─────────────────────────────────────────────────
-import { renderer, renderTarget, quadScene, quadCam } from './script/core/renderer.js';
-import { scene, camera, controls } from './script/core/scene.js';
-import { tickCameraFocus } from './script/core/cameraFocus.js';
-import { pointLights } from './script/core/lights.js';
+import { renderer, renderTarget, quadScene, quadCam, scene, camera, controls, tickCameraFocus, pointLights } from './script/core/scene.js';
 
 // ─── 메시 ─────────────────────────────────────────────────
-import './script/mesh/ground.js';
 import './script/mesh/dome.js';
 import './script/mesh/obstacles.js';
-import './script/mesh/stone.js';
+import './script/mesh/board.js';
+import './script/mesh/noisegenerator.js';
+import { stoneMeshes, tickStones } from './script/mesh/stone.js';
 import { centerMesh, centerBaseY, centerReadyPromise, centerLabelText } from './script/mesh/center.js';
 import { sphereMeshes, labelScene, gemsReadyPromise } from './script/mesh/gems.js';
 labelScene.add(centerLabelText);
@@ -41,7 +39,7 @@ const clock = new THREE.Clock();
   requestAnimationFrame(animate);
   const t = clock.getElapsedTime();
 
-  const ORBIT_SPEED = 0.08; // rad/s — 느린 공전
+  const ORBIT_SPEED = 0.08;
 
   sphereMeshes.forEach(({ sphere, gem, glow, pointLightBot, pointLightTop, labelText, node }, i) => {
     const angle = node.angle + t * ORBIT_SPEED;
@@ -65,14 +63,11 @@ const clock = new THREE.Clock();
     glow.material.opacity   = 0.23 + Math.sin(t * 1.5 + i) * 0.04;
   });
 
-  // 센터 메시 플로팅
   if (centerMesh) {
     centerMesh.position.y = centerBaseY + Math.sin(t * 0.8) * 0.15;
     centerLabelText.position.set(0, centerMesh.position.y + 4.0, 0);
   }
 
-
-  // 파티클 이동 (+X 방향, 경계 벗어나면 반대쪽 재진입)
   const posAttr = particleGeo.getAttribute('position');
   const PARTICLE_SPEED = [0.002, -0.003, 0.002];
   const BOUND = 25;
@@ -90,23 +85,20 @@ const clock = new THREE.Clock();
   }
   posAttr.needsUpdate = true;
 
-  // 포인트 라이트 펄스 (각각 위상 다르게)
   pointLights.forEach((light, i) => {
     light.intensity = 4.5 + Math.sin(t * 0.9 + i * 1.1) * 1.5;
   });
 
   if (centerMesh) tickStarOrbits(centerMesh.position, t);
+  tickStones(t);
   tickCameraFocus();
   tickHud(camera);
   controls.update();
 
-  // 1. 씬을 저해상도 RT에 렌더
   renderer.setRenderTarget(renderTarget);
   renderer.render(scene, camera);
-  // 2. RT를 풀스크린 쿼드로 blit
   renderer.setRenderTarget(null);
   renderer.render(quadScene, quadCam);
-  // 3. 라벨만 풀해상도로 덧그림 (autoClear 끄고 덮어씌움)
   renderer.autoClear = false;
   renderer.render(labelScene, camera);
   renderer.autoClear = true;

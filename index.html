@@ -225,6 +225,74 @@
     }
     #panel.wide.open { right: 0; }
 
+    /* 앱 패널 */
+    #app-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      z-index: 199;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    #app-overlay.open { opacity: 1; pointer-events: auto; }
+
+    #app-panel {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.96);
+      width: 50vw;
+      height: 75vh;
+      background: rgba(8, 8, 18, 0.98);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      border-radius: 4px;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s, transform 0.3s;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #app-panel.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    #app-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      flex-shrink: 0;
+    }
+    #app-panel-title {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: #3a4060;
+    }
+    #app-panel-close {
+      background: none;
+      border: none;
+      color: #444;
+      font-size: 16px;
+      cursor: pointer;
+      transition: color 0.2s;
+      line-height: 1;
+    }
+    #app-panel-close:hover { color: #aaa; }
+
+    #app-panel-iframe {
+      flex: 1;
+      border: none;
+      width: 100%;
+      min-height: 0;
+    }
+
     /* 어바웃 패널 */
     #about-panel {
       position: fixed;
@@ -307,6 +375,16 @@
   <div id="panel-divider"></div>
   <div id="panel-desc">Description</div>
   <div id="panel-items"></div>
+</div>
+
+<!-- 앱 패널 오버레이 -->
+<div id="app-overlay"></div>
+<div id="app-panel">
+  <div id="app-panel-header">
+    <span id="app-panel-title">—</span>
+    <button id="app-panel-close">✕</button>
+  </div>
+  <iframe id="app-panel-iframe" src="" allowfullscreen></iframe>
 </div>
 
 <script type="importmap">

@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { scene } from '../core/scene.js';
 import { NODES } from '../data/nodes.js';
-import { loadSTL } from '../core/loadSTL.js';
+import { loadSTL } from '../core/SceneObject.js';
 
 // 라벨만 담는 별도 씬 — 풀해상도로 렌더
 export const labelScene = new THREE.Scene();
