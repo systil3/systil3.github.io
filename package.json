@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "unique-names-generator": "file:unique-names-generator-4.7.1.tgz",
+    "yarn": "^1.22.22"
+  }
+}
