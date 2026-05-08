@@ -9,7 +9,7 @@ import './script/mesh/obstacles.js';
 import './script/mesh/board.js';
 import './script/mesh/noisegenerator.js';
 import { stoneMeshes, tickStones } from './script/mesh/stone.js';
-import { centerMesh, centerBaseY, centerReadyPromise, centerLabelText } from './script/mesh/center.js';
+import { centerMesh, centerBaseY, centerReadyPromise, centerLabelText, wireframeMat } from './script/mesh/center.js';
 import { sphereMeshes, labelScene, gemsReadyPromise } from './script/mesh/gems.js';
 labelScene.add(centerLabelText);
 import { particleGeo, positions, PARTICLE_COUNT } from './script/mesh/particles.js';
@@ -66,6 +66,7 @@ const clock = new THREE.Clock();
   if (centerMesh) {
     centerMesh.position.y = centerBaseY + Math.sin(t * 0.8) * 0.15;
     centerLabelText.position.set(0, centerMesh.position.y + 4.0, 0);
+    wireframeMat.opacity = 0.1 + Math.sin(t * 1.8) * 0.04;
   }
 
   const posAttr = particleGeo.getAttribute('position');

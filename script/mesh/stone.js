@@ -56,10 +56,24 @@ loadSTL('model/stone.stl').then(async geo => {
     const phase = Math.random() * Math.PI * 2;
 
     const stone = new THREE.Mesh(geo, new THREE.MeshStandardMaterial({
-      color: 0x778899, roughness: 0.85, metalness: 0.05, flatShading: true,
+      color: 0x778899,
+      roughness: 0.85,
+      metalness: 0.05,
+      flatShading: true,
     }));
     stone.position.set(x, baseY, FRONT_Z);
     stone.userData = { platform, url };
+
+    const wireOverlay = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+      color: new THREE.Color(0x778899).multiplyScalar(0.45),
+      wireframe: true,
+      transparent: true,
+      opacity: 0.06,
+      depthWrite: false,
+    }));
+    wireOverlay.renderOrder = 999;
+    stone.add(wireOverlay);
+
     scene.add(stone);
     stoneMeshes.push(stone);
 

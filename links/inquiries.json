@@ -1,0 +1,23 @@
+{
+  "items": [
+    {
+      "title" : "Do you accept any music commision now?",
+      "desc"  : "Yes, but as long as it stays within the range of <span style='color:#fff'>genres</span> or vibes I can handle.<br> (For example, genres related to acoustic or orchestral factors wouldn't suite my current style. if you need further details about these, please contact me)"
+    },
+
+    {
+      "title" : "Which tools do you mainly use?",
+      "desc"  : "Music : FL Studio 20XX / Ableton Live 1X <br> Programming : VS Code, C++, Python, JS, and so many frameworks <br> Design : Adobe Illustrator / Photoshop / MagicaVoxel / Blender"
+    },
+
+    {
+      "title" : "I couldn't understand which field you are mainly focusing now.",
+      "desc"  : "I would argue that in life, the threshold for happiness significantly decreases after trying various things."
+    },
+
+    {
+      "title" : "Other Inquiries",
+      "desc"  : "If you have any kind of commission, request, question, or other things you consider to contact me with, feel free to have some talk with <span style='color:#fff'>social medias</span>:<br><img src='/icons/discord.svg' style='width:13px;height:13px;vertical-align:middle;margin-right:5px;opacity:0.85'> <span style='color:#fff'>Discord — systile</span> (VERY recommended)<br><img src='/icons/mail.svg' style='width:13px;height:13px;vertical-align:middle;margin-right:5px;opacity:0.85'> Mail — sysl6646@naver.com"
+    }
+  ]
+}

@@ -40,11 +40,13 @@ function makeLabel(text, color) {
 }
 
 function spawnGemNode(node, geo) {
+  const baseColor = new THREE.Color(node.color);
+
   const mat = new THREE.MeshStandardMaterial({
-    color: node.color,
+    color: baseColor,
     roughness: 0.0,
     metalness: 0.3,
-    emissive: new THREE.Color(node.color).multiplyScalar(0.6),
+    emissive: baseColor.clone().multiplyScalar(0.6),
     emissiveIntensity: 2.2,
     side: THREE.DoubleSide,
     flatShading: true,
@@ -65,6 +67,19 @@ function spawnGemNode(node, geo) {
   gem.userData.node   = node;
   gem.castShadow = true;
   scene.add(gem);
+
+  // wireframe overlay — slightly darker than gem color
+  const wireColor = baseColor.clone().multiplyScalar(0.45);
+  const wireMat = new THREE.MeshBasicMaterial({
+    color: wireColor,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.4,
+    depthWrite: false,
+  });
+  const wireOverlay = new THREE.Mesh(geo, wireMat);
+  wireOverlay.renderOrder = 999;
+  gem.add(wireOverlay);
 
   const glowMat = new THREE.MeshBasicMaterial({
     color: node.color, transparent: true, opacity: 0.18,

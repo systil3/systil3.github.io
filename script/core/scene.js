@@ -114,23 +114,23 @@ let camAnimFrom       = null;
 let camAnimFromTarget = null;
 let resetDestCam      = null;
 let resetDestTarget   = null;
-let followSphere      = null;
+let followNode      = null;
 
-const _camOffset = new THREE.Vector3(0, 0.5, 3.5);
+const _camOffset = new THREE.Vector3(0, 0.5, 4.5);
 
 function easeInOut(t) { return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t; }
 
-export function focusOnSphere(sphere) {
+export function focusOnNode(sphere) {
   camAnimFrom       = camera.position.clone();
   camAnimFromTarget = controls.target.clone();
   camAnimT          = 0;
   resetDestCam      = null;
   resetDestTarget   = null;
-  followSphere      = sphere ?? null;
+  followNode      = sphere ?? null;
 }
 
 export function resetCamera() {
-  followSphere      = null;
+  followNode      = null;
   camAnimFrom       = camera.position.clone();
   camAnimFromTarget = controls.target.clone();
   resetDestCam      = CAMERA_INIT_POS.clone();
@@ -139,22 +139,24 @@ export function resetCamera() {
 }
 
 export function clearFollow() {
-  followSphere = null;
+  followNode = null;
 }
 
 export function tickCameraFocus(T = 1) {
   const animating = camAnimT < T;
 
-  if (followSphere) {
-    const destTarget = followSphere.position;
-    const destCam    = followSphere.position.clone().add(_camOffset);
+  if (followNode) {
+    const destTarget = followNode.position;
+    const destCam    = followNode.position.clone().add(_camOffset);
     if (animating) {
       camAnimT = Math.min(camAnimT + 0.01, T);
       const et = easeInOut(camAnimT / T);
       camera.position.lerpVectors(camAnimFrom, destCam, et);
       controls.target.lerpVectors(camAnimFromTarget, destTarget, et);
     } else {
+      const offset = camera.position.clone().sub(controls.target);
       controls.target.copy(destTarget);
+      camera.position.copy(destTarget).add(offset);
     }
     return;
   }

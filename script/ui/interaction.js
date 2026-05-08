@@ -1,9 +1,9 @@
 import * as THREE from 'three';
-import { camera, renderer, focusOnSphere } from '../core/scene.js';
+import { camera, renderer, focusOnNode } from '../core/scene.js';
 import { sphereMeshes } from '../mesh/gems.js';
 import { stoneMeshes } from '../mesh/stone.js';
 import { openPanel, openAppPanel, openAbout } from './panel.js';
-import { centerMesh } from '../mesh/center.js';
+import { centerChildren, centerMesh } from '../mesh/center.js';
 import { noiseChildren } from '../mesh/noisegenerator.js';
 
 
@@ -27,8 +27,7 @@ renderer.domElement.addEventListener('pointerup', e => {
   pointer.x =  (e.clientX / window.innerWidth)  * 2 - 1;
   pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
   raycaster.setFromCamera(pointer, camera);
-
-  // 중앙 캐릭터 클릭
+  
   if (centerMesh) {
     const centerHits = raycaster.intersectObject(centerMesh, true);
     if (centerHits.length > 0) {
@@ -37,7 +36,6 @@ renderer.domElement.addEventListener('pointerup', e => {
     }
   }
 
-  // 노이즈 제너레이터 클릭
   if (noiseChildren.length > 0) {
     const noiseHits = raycaster.intersectObjects(noiseChildren);
     if (noiseHits.length > 0) {
@@ -47,7 +45,6 @@ renderer.domElement.addEventListener('pointerup', e => {
     }
   }
 
-  // 소셜 돌 클릭 확인
   const stoneHits = raycaster.intersectObjects(stoneMeshes);
   if (stoneHits.length > 0) {
     const { url } = stoneHits[0].object.userData;
@@ -61,19 +58,17 @@ renderer.domElement.addEventListener('pointerup', e => {
   const hit  = hits[0].object;
   const node = hit.userData.node;
 
-  // 이전 선택 리셋
   sphereMeshes.forEach(({ gem, node: n }) => {
     gem.material.emissive.set(new THREE.Color(n.color).multiplyScalar(0.6));
     gem.scale.setScalar(gem.userData.baseScale);
   });
 
-  // 선택 강조
   const entry = sphereMeshes.find(s => s.sphere === hit);
   if (entry) {
     entry.gem.material.emissive.set(new THREE.Color(node.color).multiplyScalar(1.0));
     entry.gem.scale.setScalar(entry.gem.userData.baseScale * 1.25);
   }
 
-  focusOnSphere(hit);
+  focusOnNode(hit);
   openPanel(node);
 });

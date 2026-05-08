@@ -4,6 +4,7 @@ import { GltfObject } from '../core/SceneObject.js';
 
 export let centerMesh  = null;
 export let centerBaseY = 0;
+export const centerChildren = [];
 
 function makeTitleLabel() {
   const cv = document.createElement('canvas');
@@ -32,7 +33,7 @@ const eyeMat = new THREE.MeshStandardMaterial({
   flatShading: true, side: THREE.DoubleSide,
 });
 const bodyMat = new THREE.MeshStandardMaterial({
-  color: 0x3a3880, roughness: 0.4, metalness: 0.1,
+  color: 0x3080ff, roughness: 0.4, metalness: 0.1,
   emissive: new THREE.Color(0x3a3880), emissiveIntensity: 0.6,
   flatShading: true, side: THREE.DoubleSide,
 });
@@ -42,9 +43,18 @@ const capeMat = new THREE.MeshStandardMaterial({
   flatShading: true, side: THREE.DoubleSide,
 });
 
+export const wireframeMat = new THREE.MeshBasicMaterial({
+  color: 0x4488ff,
+  wireframe: true,
+  transparent: true,
+  opacity: 0.35,
+  depthWrite: false,
+});
+
 export const centerReadyPromise = new Promise(resolve => {
   GltfObject.load('model/center.glb', scene)
     .then(obj => {
+      const centerChildren = [];
       obj.root.traverse(child => {
         if (!child.isMesh) return;
         if (/cone/i.test(child.name)) {
@@ -58,6 +68,14 @@ export const centerReadyPromise = new Promise(resolve => {
           mats.forEach(m => { m.flatShading = true; m.side = THREE.DoubleSide; m.needsUpdate = true; });
         }
         child.castShadow = child.receiveShadow = true;
+        centerChildren.push(child);
+      });
+
+      centerChildren.forEach(child => {
+        if (/cone/i.test(child.name)) return;
+        const overlay = new THREE.Mesh(child.geometry, wireframeMat);
+        overlay.renderOrder = 999;
+        child.add(overlay);
       });
 
       obj.normalizeTo(6).snapToFloor(-2.5);

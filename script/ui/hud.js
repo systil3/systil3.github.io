@@ -1,5 +1,3 @@
-// PS1 스타일 HUD 업데이터
-
 const hudCoords = document.getElementById('hud-coords');
 const hudStatus = document.getElementById('hud-status');
 

@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { sphereMeshes } from '../mesh/gems.js';
 import { resetCamera } from '../core/scene.js';
+import { NODES } from '../data/nodes.js';
 
 // ─── App Panel (iframe) ───────────────────────────────────────────────────────
 const appOverlay = document.getElementById('app-overlay');
@@ -25,15 +26,38 @@ export function closeAppPanel() {
 appClose.addEventListener('click', closeAppPanel);
 appOverlay.addEventListener('click', closeAppPanel);
 
-// ─── Node Panel ───────────────────────────────────────────────────────────────
-const panel         = document.getElementById('panel');
-const panelClose    = document.getElementById('panel-close');
-const panelCategory = document.getElementById('panel-category');
-const panelTitle    = document.getElementById('panel-title');
-const panelDivider  = document.getElementById('panel-divider');
-const panelDesc     = document.getElementById('panel-desc');
-const panelItems    = document.getElementById('panel-items');
-const hint          = document.getElementById('hint');
+// ─── Shared helpers ───────────────────────────────────────────────────────────
+const ogCache = new Map();
+
+async function fetchOgImage(url) {
+  if (ogCache.has(url)) return ogCache.get(url);
+  const gh = url.match(/^https?:\/\/github\.com\/([^/]+\/[^/]+)/);
+  let src = null;
+  if (gh) {
+    src = `https://opengraph.githubassets.com/1/${gh[1]}`;
+  } else {
+    try {
+      const res  = await fetch(`https://api.microlink.io/?url=${encodeURIComponent(url)}`);
+      const data = await res.json();
+      src = data?.data?.image?.url ?? null;
+    } catch {}
+  }
+  ogCache.set(url, src);
+  return src;
+}
+
+async function preloadAllOgImages() {
+  const allNodes = [];
+  NODES.forEach(n => {
+    if (n.jsonFile) allNodes.push(n);
+    n.subNodes?.forEach(s => { if (s.jsonFile) allNodes.push(s); });
+  });
+  await Promise.all(allNodes.map(async node => {
+    const jsonData = await loadJson(node.jsonFile);
+    const links = Array.isArray(jsonData?.links) ? jsonData.links : [];
+    await Promise.all(links.map(e => e.link ? fetchOgImage(e.link) : null));
+  }));
+}
 
 async function loadImages(folder) {
   const res = await fetch(`/${folder}/images.json`);
@@ -45,29 +69,21 @@ async function loadJson(file) {
   return res.ok ? res.json() : null;
 }
 
-export async function openPanel(node, wide = false) {
-  panel.classList.toggle('wide', wide);
-  panelCategory.textContent     = 'works';
-  panelTitle.textContent        = node.label;
-  panelDivider.style.background = node.glowColor;
-  panelDesc.textContent         = node.desc;
-  panelItems.innerHTML          = '';
-
-  node.items.forEach(item => {
+async function fillContent(node, container) {
+  node.items?.forEach(item => {
     const el = document.createElement('div');
     el.className = 'panel-item';
     el.innerHTML = `<div class="panel-item-title">${item.title}</div>
                     <div class="panel-item-sub">${item.sub}</div>`;
-    panelItems.appendChild(el);
+    container.appendChild(el);
   });
 
-  const jsonPath = node.jsonFile ?? `links/${node.id}.json`;
-  const jsonData = await loadJson(jsonPath);
+  const jsonData = node.jsonFile ? await loadJson(node.jsonFile) : null;
 
   const links = Array.isArray(jsonData?.links) ? jsonData.links : [];
   links.forEach(entry => {
     const card = document.createElement('div');
-    card.className = 'panel-image-card' + (entry.link ? ' panel-item-link' : '');
+    card.className = 'panel-image-card';
     if (entry.link) {
       card.style.cursor = 'pointer';
       card.addEventListener('click', () => window.open(entry.link, '_blank'));
@@ -75,10 +91,10 @@ export async function openPanel(node, wide = false) {
       img.className = 'panel-image';
       img.style.display = 'none';
       card.appendChild(img);
-      fetch(`/api/og?url=${encodeURIComponent(entry.link)}`)
-        .then(r => r.json())
-        .then(({ url }) => { if (url) { img.src = url; img.style.display = 'block'; } })
-        .catch(() => {});
+      (entry.ogImage
+        ? Promise.resolve(entry.ogImage)
+        : fetchOgImage(entry.link)
+      ).then(src => { if (src) { img.src = src; img.style.display = ''; } });
     }
     const titleEl = document.createElement('div');
     titleEl.className = 'panel-image-label';
@@ -88,7 +104,7 @@ export async function openPanel(node, wide = false) {
     descEl.textContent = entry.desc;
     card.appendChild(titleEl);
     card.appendChild(descEl);
-    panelItems.appendChild(card);
+    container.appendChild(card);
   });
 
   if (Array.isArray(jsonData?.timeline)) {
@@ -107,7 +123,7 @@ export async function openPanel(node, wide = false) {
       `;
       tl.appendChild(item);
     });
-    panelItems.appendChild(tl);
+    container.appendChild(tl);
   }
 
   if (node.folder) {
@@ -130,8 +146,85 @@ export async function openPanel(node, wide = false) {
       card.appendChild(img);
       card.appendChild(workTitle);
       card.appendChild(workDesc);
+      container.appendChild(card);
+    });
+  }
+}
+
+// ─── Sub Panel ────────────────────────────────────────────────────────────────
+const subPanel    = document.getElementById('sub-panel');
+const subCategory = document.getElementById('sub-panel-category');
+const subTitle    = document.getElementById('sub-panel-title');
+const subDivider  = document.getElementById('sub-panel-divider');
+const subDesc     = document.getElementById('sub-panel-desc');
+const subItems    = document.getElementById('sub-panel-items');
+
+async function openSubPanel(subNode, parentLabel = 'works') {
+  subCategory.textContent     = parentLabel.toLowerCase();
+  subTitle.textContent        = subNode.label;
+  subDivider.style.background = subNode.glowColor;
+  subDesc.textContent         = subNode.desc;
+  subItems.innerHTML          = '';
+  subPanel.style.setProperty('--node-color', subNode.glowColor);
+  subPanel.classList.add('open');
+  await fillContent(subNode, subItems);
+}
+
+function closeSubPanel() {
+  subPanel.classList.remove('open');
+}
+
+// ─── Node Panel ───────────────────────────────────────────────────────────────
+const panel         = document.getElementById('panel');
+const panelClose    = document.getElementById('panel-close');
+const panelCategory = document.getElementById('panel-category');
+const panelTitle    = document.getElementById('panel-title');
+const panelDivider  = document.getElementById('panel-divider');
+const panelDesc     = document.getElementById('panel-desc');
+const panelItems    = document.getElementById('panel-items');
+const hint          = document.getElementById('hint');
+
+export async function openPanel(node) {
+  closeSubPanel();
+  panelCategory.textContent     = node.subNodes ? node.id : 'works';
+  panelTitle.textContent        = node.label;
+  panelDivider.style.background = node.glowColor;
+  panelDesc.textContent         = node.desc;
+  panelItems.innerHTML          = '';
+
+  if (node.subNodes) {
+    if (node.embedFile || node.embed) {
+      const embedDiv = document.createElement('div');
+      embedDiv.className = 'panel-embed';
+      if (node.embedFile) {
+        const res = await fetch(`/${node.embedFile}`);
+        if (res.ok) embedDiv.innerHTML = await res.text();
+      } else {
+        embedDiv.innerHTML = node.embed;
+      }
+      panelItems.appendChild(embedDiv);
+    }
+    node.subNodes.forEach(sub => {
+      const card = document.createElement('div');
+      card.className = 'panel-item';
+      card.style.borderColor = sub.glowColor + '44';
+      card.innerHTML = `<div class="panel-item-title">${sub.label}</div>
+                        <div class="panel-item-sub">${sub.desc}</div>`;
+      card.addEventListener('click', () => openSubPanel(sub, node.label));
       panelItems.appendChild(card);
     });
+  } else if (node.type === 'text') {
+    const jsonData = node.jsonFile ? await loadJson(node.jsonFile) : null;
+    (jsonData?.items ?? []).forEach(item => {
+      const card = document.createElement('div');
+      card.className = 'panel-item';
+      card.style.marginBottom = '16px';
+      card.innerHTML = `<div class="panel-item-title" style="font-size:22px;margin-bottom:8px;line-height:1.2">${item.title}</div>
+                        <div class="panel-item-sub" style="font-size:18px;line-height:1.2">${item.desc ?? ''}</div>`;
+      panelItems.appendChild(card);
+    });
+  } else {
+    await fillContent(node, panelItems);
   }
 
   panel.style.setProperty('--node-color', node.glowColor);
@@ -140,7 +233,8 @@ export async function openPanel(node, wide = false) {
 }
 
 export function closePanel() {
-  panel.classList.remove('open', 'wide');
+  panel.classList.remove('open');
+  closeSubPanel();
   resetCamera();
   sphereMeshes.forEach(({ gem, node: n }) => {
     gem.material.emissive.set(new THREE.Color(n.color).multiplyScalar(0.6));
@@ -174,8 +268,8 @@ function calcCols() {
 
 function buildLines(data, cols) {
   const lines    = [];
-  const addPlain = text         => lines.push({ type: 'plain', text });
-  const addSep   = ()           => addPlain('-'.repeat(cols));
+  const addPlain = text           => lines.push({ type: 'plain', text });
+  const addSep   = ()             => addPlain('-'.repeat(cols));
   const addField = (label, value) => {
     const prefix  = '* ' + label + ' ';
     const suffix  = ' ' + value;
@@ -189,6 +283,14 @@ function buildLines(data, cols) {
   if (data.education?.length) {
     addPlain(''); addSep(); addPlain('');
     for (const e of data.education)     addField(e.label, e.value);
+  }
+  if (data.inquiries) {
+    addPlain(''); addSep(); addPlain('');
+    addPlain(data.inquiries.title);
+    addPlain('');
+    addPlain(data.inquiries.body);
+    addPlain('');
+    for (const item of (data.inquiries.items ?? [])) addPlain('  ' + item);
   }
   addPlain('');
   return lines;
@@ -256,3 +358,5 @@ export function closeAbout() {
 }
 
 aboutClose.addEventListener('click', closeAbout);
+
+preloadAllOgImages();
