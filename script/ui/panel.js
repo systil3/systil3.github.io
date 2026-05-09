@@ -3,7 +3,7 @@ import { sphereMeshes } from '../mesh/gems.js';
 import { resetCamera } from '../core/scene.js';
 import { NODES } from '../data/nodes.js';
 
-// ─── App Panel (iframe) ───────────────────────────────────────────────────────
+// App Panel (iframe)
 const appOverlay = document.getElementById('app-overlay');
 const appPanel   = document.getElementById('app-panel');
 const appIframe  = document.getElementById('app-panel-iframe');
@@ -26,7 +26,7 @@ export function closeAppPanel() {
 appClose.addEventListener('click', closeAppPanel);
 appOverlay.addEventListener('click', closeAppPanel);
 
-// ─── Shared helpers ───────────────────────────────────────────────────────────
+// Shared helpers
 const ogCache = new Map();
 
 async function fetchOgImage(url) {
@@ -151,7 +151,7 @@ async function fillContent(node, container) {
   }
 }
 
-// ─── Sub Panel ────────────────────────────────────────────────────────────────
+// Sub Panel
 const subPanel    = document.getElementById('sub-panel');
 const subCategory = document.getElementById('sub-panel-category');
 const subTitle    = document.getElementById('sub-panel-title');
@@ -174,7 +174,7 @@ function closeSubPanel() {
   subPanel.classList.remove('open');
 }
 
-// ─── Node Panel ───────────────────────────────────────────────────────────────
+// Node Panel
 const panel         = document.getElementById('panel');
 const panelClose    = document.getElementById('panel-close');
 const panelCategory = document.getElementById('panel-category');
@@ -244,7 +244,7 @@ export function closePanel() {
 
 panelClose.addEventListener('click', closePanel);
 
-// ─── About Panel ──────────────────────────────────────────────────────────────
+// About Panel
 const aboutPanel  = document.getElementById('about-panel');
 const aboutClose  = document.getElementById('about-close');
 const aboutScreen = document.getElementById('about-screen');
