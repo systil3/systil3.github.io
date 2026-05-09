@@ -42,7 +42,7 @@
     #panel-close:hover { color: #fff; }
 
     #panel-category {
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 3px;
       text-transform: uppercase;
       color: #666;
@@ -60,7 +60,7 @@
       border-radius: 2px;
     }
     #panel-desc {
-      font-size: 16px;
+      font-size: 18px;
       line-height: 1.8;
       color: #999;
       white-space: pre-line;
@@ -71,7 +71,7 @@
       overflow-y: auto;
     }
     .panel-item {
-      padding: 16px;
+      padding: 18px;
       border: 1px solid rgba(236, 236, 236, 0.733);
       border-radius: 8px;
       margin-bottom: 12px;
@@ -108,14 +108,14 @@
     }
     .panel-image-label {
       padding: 8px 12px 4px;
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 600;
       color: #ddd;
       margin-top: 8px;
     }
     .panel-image-desc {
       padding: 0 12px 10px;
-      font-size: 11px;
+      font-size: 14px;
       color: #666;
     }
 
@@ -248,7 +248,7 @@
     #sub-panel.open { right: 25vw; }
 
     #sub-panel-category {
-      font-size: 11px;
+      font-size: 12px;
       letter-spacing: 3px;
       text-transform: uppercase;
       color: #666;
@@ -266,7 +266,7 @@
       border-radius: 2px;
     }
     #sub-panel-desc {
-      font-size: 14px;
+      font-size: 18px;
       line-height: 1.8;
       color: #999;
       white-space: pre-line;
