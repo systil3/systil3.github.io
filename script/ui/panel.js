@@ -269,29 +269,27 @@ function calcCols() {
 function buildLines(data, cols) {
   const lines    = [];
   const addPlain = text           => lines.push({ type: 'plain', text });
-  const addSep   = ()             => addPlain('-'.repeat(cols));
   const addField = (label, value) => {
     const prefix  = '* ' + label + ' ';
     const suffix  = ' ' + value;
     const hyphens = Math.max(2, cols - visualWidth(prefix) - visualWidth(suffix));
     lines.push({ type: 'field', prefix, hyphens: '-'.repeat(hyphens), suffix });
   };
+  const addHeader = label => {
+    const inner = ' ' + label + ' ';
+    const pad   = Math.max(0, cols - visualWidth(inner));
+    const left  = Math.floor(pad / 2);
+    const right = pad - left;
+    addPlain('-'.repeat(left) + inner + '-'.repeat(right));
+  };
 
   if (data.bio) { addPlain(data.bio); addPlain(''); }
-  addSep(); addPlain('');
-  for (const f of (data.fields ?? []))  addField(f.label, f.value);
-  if (data.education?.length) {
-    addPlain(''); addSep(); addPlain('');
-    for (const e of data.education)     addField(e.label, e.value);
-  }
-  if (data.inquiries) {
-    addPlain(''); addSep(); addPlain('');
-    addPlain(data.inquiries.title);
-    addPlain('');
-    addPlain(data.inquiries.body);
-    addPlain('');
-    for (const item of (data.inquiries.items ?? [])) addPlain('  ' + item);
-  }
+  Object.entries(data).forEach(([key, items], i) => {
+    if (key === 'bio' || !Array.isArray(items)) return;
+    if (i > 0) addPlain('');
+    addHeader(key); addPlain('');
+    for (const item of items) addField(item.label, item.value);
+  });
   addPlain('');
   return lines;
 }

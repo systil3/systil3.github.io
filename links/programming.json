@@ -3,20 +3,20 @@
     "links" : [
 
     {"link" : "https://github.com/systil3/MeshSim",
-    "title" : "MeshSim(가제)",
-    "desc" : "그물망 형태의 네트워크에서 패킷 송수신을 시뮬레이션하는 웹게임입니다."},
+    "title" : "MeshSim (temporary name)",
+    "desc" : "A web-based simulation game for packet transmission over a mesh network."},
 
     {"link" : "https://github.com/systil3/terrain_generation_with_d_square",
     "title" : "terrain_generation_with_d_square",
-    "desc" : "다이아몬드 스퀘어 알고리즘을 이용한 노이즈 이미지 생성 프로그램입니다."},
+    "desc" : "A terrain noise generator using Diamond-Square algorithm."},
 
     {"link" : "https://github.com/systil3/anime-character-stroke-extracter",
     "title" : "anime-character-stroke-extracter",
-    "desc" : "캐릭터에서 윤곽선을 추출해주는 프로그램입니다."},
+    "desc" : "Outline extracter from anime-style character images."},
 
     {"link" : "https://github.com/systil3/caverunner-from-madcamp4",
     "title" : "CaveRunner",
-    "desc" : "플랫포머 형태의 게임으로, 복잡한 맵을 탐험하며 길을 찾아 결승 지점 깃발에 도달해야 하는 게임입니다."}
+    "desc" : "Platformer game where you navigate to the finish flag while exploring a VERY complex level."}
 
     ]
 }
