@@ -6,6 +6,11 @@
     },
 
     {
+      "title" : "Can I use your music to my personal development or project?",
+      "desc"  : "If the scope of the project you are referring to involves music as a primary gameplay tool, such as in a rhythm game, Normally I am really skeptical about this vision due to various issues like fandom conflicts, copyright disputes, etc. However, you can still arrange for inclusion through some consultation with me, so please contact me via social media if you wish to seize this chance. <br> If the project you are describing is a video or collection of photography where music just serves as a supporting element, you may freely use my works as long as you officially download the tracks from platforms like Bandcamp and credit my name within the project. <br> However, please note that since the works in the 'remixes' category are not authorized from original artists, so It would cause copyright issues from usage without any inspection."
+    },
+
+    {
       "title" : "Which tools do you mainly use?",
       "desc"  : "Music : FL Studio 20XX / Ableton Live 1X <br> Programming : VS Code, C++, Python, JS, and so many frameworks <br> Design : Adobe Illustrator / Photoshop / MagicaVoxel / Blender"
     },
