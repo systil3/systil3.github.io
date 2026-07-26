@@ -1,6 +1,10 @@
 {   
     "label" : "music",
     "links" : [
+        
+    {"link" : "https://systile.bandcamp.com/album/systile-various-edits-vol1",
+    "title" : "systile various edits vol1",
+    "desc" : "collection of some edits / bootlegs I spontaneously made from past to now"},
 
     {"link" : "https://fanlink.tv/manacle",
     "title" : "Manacle",
