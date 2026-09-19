@@ -31,7 +31,7 @@ renderer.domElement.addEventListener('pointerup', e => {
   if (centerMesh) {
     const centerHits = raycaster.intersectObject(centerMesh, true);
     if (centerHits.length > 0) {
-      openAbout();
+      //openAbout();
       return;
     }
   }
